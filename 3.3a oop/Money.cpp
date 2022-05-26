@@ -61,19 +61,28 @@ Money::Money(const Money& r)
 Money::~Money() 
 {}
 
-Money operator -(const Money& l, const Money& r)
+Money operator -(const Money& x, const Money& y)
 {
 	Money t;
-
-	long a = l.getGrn() - r.getGrn();
-	unsigned long b = l.getKop() - r.getKop();
-
-	t.setGrn(a);
-	t.setKop(b);
-
+	if ((x.getGrn() < y.getGrn()) && (x.getKop() < y.getKop()))
+	{
+		t.setGrn(0);
+		t.setKop(0);
+		return t;
+	}
+	if (x.getKop() < y.getKop())
+	{
+		t.setGrn((x.getGrn() - 1) - y.getGrn());
+		t.setKop(100 - (y.getKop() - x.getKop()));
+	}
+	else
+	{
+		t.setGrn(x.getGrn() - y.getGrn());
+		t.setKop(x.getKop() - y.getKop());
+	}
 	return t;
 }
-Money operator *(const Money& x, const  double y)
+Money operator *(const Money& x, const double y)
 {
 	Money t;
 	long a = (x.getGrn() * y);
@@ -88,7 +97,24 @@ Money operator *(const Money& x, const  double y)
 	t.setKop(b);
 	return t;
 }
-
+bool Money::operator ==(const Money& x)
+{
+	if ((this->getGrn() == x.getGrn()) && (this->getKop() == x.getKop()))
+		return 1;
+	else return 0;
+}
+bool Money::operator >(const Money& x)
+{
+	if ((this->getGrn() > x.getGrn()) or ((this->getGrn() == x.getGrn()) && (this->getKop() > x.getKop())))
+		return 1;
+	else return 0;
+}
+bool Money::operator < (const Money& x)
+{
+	if ((this->getGrn() < x.getGrn()) or ((this->getGrn() == x.getGrn()) && this->getKop() < x.getKop()))
+		return 1;
+	else return 0;
+}
 Money& Money::operator ++()
 {
 	int x = this->getGrn();
